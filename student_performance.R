@@ -22,4 +22,13 @@ str(data)
 head(data)
 
 
+# Summary of dataset
+summary(data)
 
+# Check missing values
+colSums(is.na(data))
+
+# Optional: create Pass/Fail target
+# For example, if Placement_Score >= 75 → pass
+data$Pass_Fail <- ifelse(data$Placement_Score >= 75, "pass", "fail")
+data$Pass_Fail <- factor(data$Pass_Fail, levels = c("fail", "pass"))
