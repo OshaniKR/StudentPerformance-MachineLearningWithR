@@ -9,9 +9,9 @@ library(randomForest) # Random forest model
 library(ROSE)         # Handle imbalance
 library(pROC)         # ROC/AUC plots
 
-#setwd("C:/Users/User/Desktop/R")
+setwd("C:/Users/User/Desktop/R")
 
-#getwd()
+getwd()
 
 # Load your CSV manually
 data <- read.csv("StudentsPerformance.csv")
@@ -32,3 +32,11 @@ colSums(is.na(data))
 # For example, if Placement_Score >= 75 → pass
 data$Pass_Fail <- ifelse(data$Placement_Score >= 75, "pass", "fail")
 data$Pass_Fail <- factor(data$Pass_Fail, levels = c("fail", "pass"))
+
+
+# Check class distribution
+table(data$Pass_Fail)
+prop.table(table(data$Pass_Fail))
+
+
+
