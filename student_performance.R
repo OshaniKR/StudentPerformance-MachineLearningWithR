@@ -39,4 +39,36 @@ table(data$Pass_Fail)
 prop.table(table(data$Pass_Fail))
 
 
+# Convert Club_Join_Date to factor (categorical)
+data$Club_Join_Date <- as.factor(data$Club_Join_Date)
+
+# Optionally scale numeric columns
+numeric_cols <- c("Math_Score", "Reading_Score", "Writing_Score", "Placement_Score")
+data[numeric_cols] <- scale(data[numeric_cols])
+
+# Final dataset ready for ML
+str(data)
+head(data)
+
+
+
+
+
+set.seed(123)
+train_index <- createDataPartition(data$Pass_Fail, p = 0.75, list = FALSE)
+train <- data[train_index, ]
+test  <- data[-train_index, ]
+
+
+# Check class balance in train/test
+table(train$Pass_Fail)
+table(test$Pass_Fail)
+
+ctrl <- trainControl(method = "cv", number = 5, classProbs = TRUE, summaryFunction = twoClassSummary)
+
+
+set.seed(123)
+model_log <- train(Pass_Fail ~ ., data = train,
+                   method = "glm", family = "binomial",
+                   metric = "ROC", trControl = ctrl)
 
