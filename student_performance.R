@@ -72,3 +72,28 @@ model_log <- train(Pass_Fail ~ ., data = train,
                    method = "glm", family = "binomial",
                    metric = "ROC", trControl = ctrl)
 
+set.seed(123)
+model_rf <- train(Pass_Fail ~ ., data = train,
+                  method = "rf", metric = "ROC", trControl = ctrl,
+                  ntree = 200)
+# Predictions
+pred_log <- predict(model_log, newdata = test)
+pred_rf  <- predict(model_rf, newdata = test)
+
+# Confusion Matrices
+confusionMatrix(pred_log, test$Pass_Fail, positive = "pass")
+confusionMatrix(pred_rf, test$Pass_Fail, positive = "pass")
+
+# ROC & AUC (Random Forest example)
+pred_rf_prob <- predict(model_rf, newdata = test, type = "prob")
+roc_rf <- roc(response = test$Pass_Fail, predictor = pred_rf_prob[,"pass"])
+plot(roc_rf, main = "Random Forest ROC Curve")
+auc(roc_rf)
+
+varImp(model_rf)
+plot(varImp(model_rf), main = "Random Forest Variable Importance")
+
+saveRDS(model_rf, "best_student_model.rds")
+# Later load with:
+# model <- readRDS("best_student_model.rds")
+
