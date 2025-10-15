@@ -4,6 +4,7 @@ install.packages(c("tidyverse", "caret", "randomForest", "ROSE", "xgboost", "pRO
 
 # Load libraries
 library(tidyverse)    # Data handling and visualization
+
 library(caret)        # ML utilities (train/test split, training)
 library(randomForest) # Random forest model
 library(ROSE)         # Handle imbalance
@@ -76,11 +77,23 @@ set.seed(123)
 model_rf <- train(Pass_Fail ~ ., data = train,
                   method = "rf", metric = "ROC", trControl = ctrl,
                   ntree = 200)
-# Predictions
+
+
+# Predictions on training data
+train_pred_log <- predict(model_log, newdata = train)
+
+# Training confusion matrix
+confusionMatrix(train_pred_log, train$Pass_Fail, positive = "pass")
+
+
+
+
+
+# Predictions for test 
 pred_log <- predict(model_log, newdata = test)
 pred_rf  <- predict(model_rf, newdata = test)
 
-# Confusion Matrices
+# Confusion Matrices for test
 confusionMatrix(pred_log, test$Pass_Fail, positive = "pass")
 confusionMatrix(pred_rf, test$Pass_Fail, positive = "pass")
 
